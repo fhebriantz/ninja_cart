@@ -1,0 +1,41 @@
+.menu {
+    background-color: #c30e2f;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #d71635;
+}
+.logo {
+    float: left;
+}
+.imagestyle {
+    padding: 15px;
+    width: 200px;
+    height: auto;
+}
+.height_row{
+	height: 50px;
+}
+.widthqty{
+	width: 50px;
+}
+.padding_row {
+    padding: 25px .75rem !important;
+}
+.footer{
+    background-color: #000 !important;
+    height: 100px;
+    padding: 20px 0px;
+}
+.cas{
+    color: #fff;
+    font-size: 14px;
+}
+.imagesquare{
+    height: 100px !important;
+    width: 100px !important;
+    overflow: hidden;
+}
+.imageproduct{
+    height: auto;
+    width: 100%;
+}
