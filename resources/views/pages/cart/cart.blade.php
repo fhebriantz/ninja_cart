@@ -10,6 +10,11 @@
 		<div class="row">
 			<div class="col-sm-12 mt-sm-5
 			">
+			@if (Session::has('success_msg'))
+	          	<div class="alert alert-success">{{ Session::get('success_msg') }}</div>
+	        @elseif (Session::has('failed_msg'))
+	        	<div class="alert alert-danger">{{ Session::get('failed_msg') }}</div>
+	        @endif
 				<h1>Master Product</h1>
 				<br>
 				<table class="table table-hover">

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2019 at 11:37 AM
--- Server version: 10.1.36-MariaDB
--- PHP Version: 7.2.11
+-- Generation Time: Feb 24, 2019 at 08:33 PM
+-- Server version: 10.1.30-MariaDB
+-- PHP Version: 7.2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -41,9 +41,38 @@ CREATE TABLE `nj_dt_order` (
 --
 
 INSERT INTO `nj_dt_order` (`id`, `id_order`, `id_product`, `price`, `qty`) VALUES
-(1, 1001, 0000000000001, 3000, 2),
-(2, 1001, 0000000000002, 5000, 3),
-(3, 1001, 0000000000004, 15000, 1);
+(6, 1551038434, 0000000000005, 5000, 5),
+(7, 1551038434, 0000000000002, 5000, 2),
+(8, 1551038434, 0000000000001, 3000, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nj_ms_coupon`
+--
+
+CREATE TABLE `nj_ms_coupon` (
+  `id` int(11) NOT NULL,
+  `coupon_code` varchar(50) NOT NULL,
+  `coupon_name` varchar(256) NOT NULL,
+  `nominal` int(11) NOT NULL,
+  `type` enum('nominal','percentage') NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  `created_by` varchar(256) NOT NULL,
+  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `nj_ms_coupon`
+--
+
+INSERT INTO `nj_ms_coupon` (`id`, `coupon_code`, `coupon_name`, `nominal`, `type`, `start_date`, `end_date`, `is_active`, `created_by`, `created_date`, `updated_by`, `updated_date`) VALUES
+(1, 'GRATISONGKIR', 'Gratis Ongkir 5000', 5000, 'nominal', '2019-02-01 00:00:00', '2019-02-28 00:00:00', 1, 'Admin Default', '2019-02-24 10:04:35', NULL, '2019-02-24 10:04:35'),
+(2, 'DISKON50', 'Diskon 50%', 50, 'percentage', '2019-02-01 00:00:00', '2019-02-28 00:00:00', 1, 'Admin Default', '2019-02-24 10:26:01', NULL, '2019-02-24 10:26:01');
 
 -- --------------------------------------------------------
 
@@ -53,6 +82,7 @@ INSERT INTO `nj_dt_order` (`id`, `id_order`, `id_product`, `price`, `qty`) VALUE
 
 CREATE TABLE `nj_ms_customer` (
   `id` int(13) UNSIGNED ZEROFILL NOT NULL,
+  `id_cus` tinyint(4) NOT NULL,
   `fullname` varchar(256) NOT NULL,
   `email` varchar(256) DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
@@ -64,16 +94,19 @@ CREATE TABLE `nj_ms_customer` (
   `is_active` tinyint(4) NOT NULL,
   `created_by` varchar(256) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_by` varchar(256) DEFAULT NULL,
-  `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `nj_ms_customer`
 --
 
-INSERT INTO `nj_ms_customer` (`id`, `fullname`, `email`, `phone_number`, `gender`, `address`, `country`, `city`, `zipcode`, `is_active`, `created_by`, `created_at`, `update_by`, `update_at`) VALUES
-(0000000000001, 'Lutfi', NULL, NULL, NULL, 'Bogor', NULL, NULL, NULL, 1, '1', '2019-02-20 03:56:08', NULL, '2019-02-20 03:56:08');
+INSERT INTO `nj_ms_customer` (`id`, `id_cus`, `fullname`, `email`, `phone_number`, `gender`, `address`, `country`, `city`, `zipcode`, `is_active`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
+(0000000000041, 1, 'felicia edwina', 'lutfi.febrianto@gmail.com', '879879898', 'Man', 'Kp Mekar Jaya No. 34\r\nKel. Rangga Mekar Kp. Mekar Jaya Rt. 01 Rw. 09  Kode Pos 16135', 'Indonesia', 'Kota Bogor', '98789', 1, 'Admin Default', '2019-02-24 11:00:34', NULL, '2019-02-24 11:00:34'),
+(0000000000042, 2, 'asdd', NULL, '09809', 'Select Gender ...', 'asd', 'Select Counrtry ...', NULL, NULL, 1, 'Admin Default', '2019-02-24 12:25:29', NULL, '2019-02-24 12:25:29'),
+(0000000000043, 3, 'Lutfi', NULL, '124', 'Select Gender ...', 'qwr', 'Select Counrtry ...', NULL, NULL, 1, 'Admin Default', '2019-02-24 12:28:21', NULL, '2019-02-24 12:28:21'),
+(0000000000044, 4, 'f', NULL, '2', 'Select Gender ...', '3', 'Select Counrtry ...', NULL, NULL, 1, 'Admin Default', '2019-02-24 12:30:23', NULL, '2019-02-24 12:30:23');
 
 -- --------------------------------------------------------
 
@@ -90,15 +123,15 @@ CREATE TABLE `nj_ms_product` (
   `is_active` tinyint(4) NOT NULL,
   `created_by` varchar(256) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_by` varchar(256) DEFAULT NULL,
-  `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `nj_ms_product`
 --
 
-INSERT INTO `nj_ms_product` (`id`, `product_name`, `product_price`, `sku`, `image`, `is_active`, `created_by`, `created_at`, `update_by`, `update_at`) VALUES
+INSERT INTO `nj_ms_product` (`id`, `product_name`, `product_price`, `sku`, `image`, `is_active`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 (1, 'Sabun', 3000, 'S1', 'sabun.jpg', 1, '1', '2019-02-20 03:53:29', NULL, '2019-02-20 04:01:53'),
 (2, 'Odol', 5000, 'O1', 'odol.jpg', 1, '1', '2019-02-20 03:53:29', NULL, '2019-02-20 04:01:59'),
 (3, 'Minyak', 3000, 'M1', 'minyak.jpg', 1, '1', '2019-02-20 03:53:29', NULL, '2019-02-20 04:02:04'),
@@ -121,8 +154,8 @@ CREATE TABLE `nj_ms_product_img` (
   `is_active` tinyint(4) NOT NULL,
   `created_by` varchar(256) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_by` varchar(256) DEFAULT NULL,
-  `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -138,8 +171,8 @@ CREATE TABLE `nj_ms_shipment` (
   `is_active` tinyint(4) NOT NULL,
   `created_by` varchar(256) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_by` varchar(256) DEFAULT NULL,
-  `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -159,15 +192,15 @@ CREATE TABLE `nj_ms_user` (
   `is_active` tinyint(4) NOT NULL,
   `created_by` varchar(256) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_by` varchar(256) DEFAULT NULL,
-  `update_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `nj_ms_user`
 --
 
-INSERT INTO `nj_ms_user` (`id`, `id_usergroup`, `fullname`, `username`, `password`, `email`, `phone_number`, `is_active`, `created_by`, `created_at`, `update_by`, `update_at`) VALUES
+INSERT INTO `nj_ms_user` (`id`, `id_usergroup`, `fullname`, `username`, `password`, `email`, `phone_number`, `is_active`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 (1, 1, 'Test Admin', 'test_admin', '8cb2237d0679ca88db6464eac60da96345513964', NULL, NULL, 1, 'SYSTEM', '2019-02-18 11:11:41', NULL, '2019-02-18 11:11:41');
 
 -- --------------------------------------------------------
@@ -183,15 +216,15 @@ CREATE TABLE `nj_ms_usergroup` (
   `is_active` tinyint(4) NOT NULL,
   `created_by` varchar(256) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified_by` varchar(256) DEFAULT NULL,
-  `modified_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `nj_ms_usergroup`
 --
 
-INSERT INTO `nj_ms_usergroup` (`id`, `usergroup`, `description`, `is_active`, `created_by`, `created_at`, `modified_by`, `modified_at`) VALUES
+INSERT INTO `nj_ms_usergroup` (`id`, `usergroup`, `description`, `is_active`, `created_by`, `created_at`, `updated_by`, `updated_at`) VALUES
 (1, 'cms_admin', 'Usergroup for administrator CMS ', 1, 'SYSTEM', '2019-02-18 04:10:38', NULL, '2019-02-18 04:10:38');
 
 -- --------------------------------------------------------
@@ -201,23 +234,31 @@ INSERT INTO `nj_ms_usergroup` (`id`, `usergroup`, `description`, `is_active`, `c
 --
 
 CREATE TABLE `nj_tr_order` (
-  `id` int(13) UNSIGNED ZEROFILL NOT NULL,
+  `id` int(13) NOT NULL,
   `id_order` int(11) NOT NULL,
-  `id_customer` int(13) UNSIGNED ZEROFILL NOT NULL,
+  `id_customer` int(13) NOT NULL,
+  `id_coupon` varchar(255) DEFAULT NULL,
+  `total` bigint(20) NOT NULL,
+  `discount_type` varchar(255) DEFAULT NULL,
+  `discount` bigint(20) DEFAULT NULL,
+  `grand_total` bigint(20) NOT NULL,
   `date_order` datetime NOT NULL,
   `is_active` tinyint(4) NOT NULL,
-  `created_by` varchar(256) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_by` varchar(256) DEFAULT NULL,
-  `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `created_by` varchar(256) NOT NULL,
+  `updated_by` varchar(256) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `nj_tr_order`
 --
 
-INSERT INTO `nj_tr_order` (`id`, `id_order`, `id_customer`, `date_order`, `is_active`, `created_by`, `created_at`, `update_by`, `update_at`) VALUES
-(0000000000001, 1001, 0000000000001, '2019-02-20 00:00:00', 1, '1', '2019-02-20 03:56:39', NULL, '2019-02-20 04:15:04');
+INSERT INTO `nj_tr_order` (`id`, `id_order`, `id_customer`, `id_coupon`, `total`, `discount_type`, `discount`, `grand_total`, `date_order`, `is_active`, `created_at`, `created_by`, `updated_by`, `updated_at`) VALUES
+(27, 1551038434, 1, '1', 44000, 'nominal', 5000, 48000, '2019-02-24 18:00:34', 1, '2019-02-24 11:00:34', 'Admin Default', NULL, '2019-02-24 11:00:34'),
+(28, 1551043528, 2, NULL, 0, NULL, NULL, 0, '2019-02-24 19:25:28', 1, '2019-02-24 12:25:29', 'Admin Default', NULL, '2019-02-24 12:25:29'),
+(29, 1551043701, 3, NULL, 0, NULL, NULL, 0, '2019-02-24 19:28:21', 1, '2019-02-24 12:28:21', 'Admin Default', NULL, '2019-02-24 12:28:21'),
+(30, 1551043823, 4, NULL, 0, NULL, NULL, 0, '2019-02-24 19:30:23', 1, '2019-02-24 12:30:23', 'Admin Default', NULL, '2019-02-24 12:30:23');
 
 --
 -- Indexes for dumped tables
@@ -227,6 +268,12 @@ INSERT INTO `nj_tr_order` (`id`, `id_order`, `id_customer`, `date_order`, `is_ac
 -- Indexes for table `nj_dt_order`
 --
 ALTER TABLE `nj_dt_order`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `nj_ms_coupon`
+--
+ALTER TABLE `nj_ms_coupon`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -273,13 +320,19 @@ ALTER TABLE `nj_tr_order`
 -- AUTO_INCREMENT for table `nj_dt_order`
 --
 ALTER TABLE `nj_dt_order`
-  MODIFY `id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `nj_ms_coupon`
+--
+ALTER TABLE `nj_ms_coupon`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `nj_ms_customer`
 --
 ALTER TABLE `nj_ms_customer`
-  MODIFY `id` int(13) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(13) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `nj_ms_product`
@@ -309,7 +362,7 @@ ALTER TABLE `nj_ms_usergroup`
 -- AUTO_INCREMENT for table `nj_tr_order`
 --
 ALTER TABLE `nj_tr_order`
-  MODIFY `id` int(13) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(13) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

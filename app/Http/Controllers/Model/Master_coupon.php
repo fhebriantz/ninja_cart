@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Detail extends Model
+class Master_coupon extends Model
 {
-    protected $table = 'nj_dt_order';
+    protected $table = 'nj_ms_coupon';
 }

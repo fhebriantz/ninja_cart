@@ -23,3 +23,7 @@ Route::get('/', 'Cart\CartController@show');
 
 // Bayar
 Route::get('/address', 'Cart\CartController@address_input');
+
+Route::post('/insert_order', 'Cart\CartController@insert_order');
+
+Route::post('/check_coupon', 'Cart\CartController@check_coupon');
