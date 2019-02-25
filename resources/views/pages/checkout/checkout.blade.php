@@ -26,11 +26,7 @@ use Illuminate\Support\Facades\Input; ?>
 			              </ul>
 			          </div>
 			        @endif
-					<form id="insert_order" method="POST" action="{{url('/insert_order')}}">
-						{{ csrf_field() }}
-						<input type="hidden" form="insert_order" name="_token" value="{{ csrf_token() }}">
-						<div class="g-recaptcha"   data-sitekey="6LcKk5MUAAAAAPFX6OJ8R_LL6R7jt255mtrW3wWv"></div>
-					</form>
+					
 					<form id="check_coupon" method="POST" action="{{url('/check_coupon')}}">
 						{{ csrf_field() }}
 					</form>
@@ -83,31 +79,42 @@ use Illuminate\Support\Facades\Input; ?>
 
 							<div class="p-10">
 								<div class="form-group">
-									<label for="">Counrtry</label>
-									<select form="insert_order" name="country" class="form-control" id="">
-										<option>Select Counrtry ...</option>
-										<option value="Indonesia" {{ (Input::old("country") == "Indonesia" ? "selected":"") }} >Indonesia</option>
-										<option value="International" {{ (Input::old("country") == "International" ? "selected":"") }} >International</option>
+									<label for="">Provinces</label>
+									<select form="insert_order" id="province" name="province" class="form-control" >
+										<option>Select Provinces ...</option>
+										@foreach($provinces as $provinsi)
+										<option value="{{$provinsi->name}}" {{ (Input::old("province") == $provinsi->name ? "selected":"") }} >{{$provinsi->name}}</option>
+										@endforeach
 									</select>
 								</div>
 							</div>
 
 							<div class="p-10">
 								  <div class="form-row">
-								    <div class="form-group col-md-6">
-								      <label for="inputCity">City</label>
-								      <input form="insert_order" value="{{ old('city') }}" name="city" type="text" class="form-control" id="inputCity">
-								    </div>
+
 								    <div class="form-group col-md-4">
-								      <label for="inputState">State</label>
-								      <select form="insert_order" name="state" id="inputState" class="form-control">
-								        <option selected>Choose...</option>
-								        <option value="Bogor Selatan" {{ (Input::old("state") == "Bogor Selatan" ? "selected":"") }} >Bogor Selatan</option>
-										<option value="Bogor Timur" {{ (Input::old("state") == "woman" ? "Bogor Timur":"") }} >Bogor Timur</option>
-										<option value="Bogor Utara" {{ (Input::old("state") == "woman" ? "Bogor Utara":"") }} >Bogor Utara</option>
-										<option value="Bogor Barat" {{ (Input::old("state") == "woman" ? "Bogor Barat":"") }} >Bogor Barat</option>
+								      <label for="inputregency">Regency</label><!-- Kota -->
+
+								      <select form="insert_order" name="regency" id="regency" class="form-control">
+								        
 								      </select>
 								    </div>
+
+								    <div class="form-group col-md-4">
+								      <label for="inputState">District</label>
+								      <select form="insert_order"  name="district" id="district" class="form-control">
+								        
+								      </select>
+								    </div>
+
+								    <div class="form-group col-md-2">
+								      <label for="inputZip">Village</label>
+								      <select form="insert_order"  name="village" id="village" class="form-control">
+								        <
+								      	
+									  </select>
+								    </div>
+
 								    <div class="form-group col-md-2">
 								      <label for="inputZip">Zip</label>
 								      <input form="insert_order" value="{{ old('zipcode') }}" maxlength="15" name="zipcode" type="text" class="form-control" id="inputZip">
@@ -174,7 +181,7 @@ use Illuminate\Support\Facades\Input; ?>
 
 												  <input type="text" name="coupon_code"  form="check_coupon" id="check_coupon" value="" class="form-control" placeholder="Check Code">
 
-												  <input type="text" name="coupon_code"  form="insert_order" id="coupon_code" value="" class="form-control" placeholder="Enter Code">
+												  <input type="hidden" name="coupon_code"  form="insert_order" id="coupon_code" value="" class="form-control" placeholder="Enter Code">
 
 												  <div class="input-group-append">
 												  	<input type="submit" name="submit" value="Check" form="check_coupon" class="btn btn-outline-secondary" >
@@ -217,6 +224,12 @@ use Illuminate\Support\Facades\Input; ?>
 									
 								</div>
 								
+								<form id="insert_order" method="POST" action="{{url('/insert_order')}}">
+									{{ csrf_field() }}
+									<div class="g-recaptcha"   data-sitekey="6LcKk5MUAAAAAPFX6OJ8R_LL6R7jt255mtrW3wWv"></div>
+									<input type="hidden" form="insert_order" name="_token" value="{{ csrf_token() }}">
+								</form>
+
 								<p style="padding-top: 10px; color: red"><strong>{{ session('captcha')}}</strong></p>
 								<input type="submit" name="submit" value="Bayar" form="insert_order">
 
@@ -242,5 +255,30 @@ use Illuminate\Support\Facades\Input; ?>
 	$(document).ready( function () {
 	    $('#cartxtable').Dataxtable();
 	} );
+</script>
+
+<script  type="text/javascript">
+	$('#province').on('change',function(e){
+      console.log(e);
+
+      var province_id = e.target.value;
+
+      // ajax 
+      $.ajax({
+              url: "{{url("ajax-regency")}}",
+              data: "province_id="+province_id,
+              cache: false,
+              success: function(data){
+                  alert(data)
+         
+              },
+                  error:function(data){
+                    $('.statusbypass').html("ID DMS Tidak Ada / Sudah Selesai");
+                    $('.valuestatus').html("");
+                    console.log("failed"); 
+                  }
+            });
+
+    });
 </script>
 @endsection

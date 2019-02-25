@@ -19,6 +19,12 @@ use App\Http\Controllers\Model\Master_customer;
 use App\Http\Controllers\Model\Master_coupon;
 use App\Http\Controllers\Model\Detail;
 
+// LOCATION
+use App\Http\Controllers\Model\Master_provinces; // Profinsi
+use App\Http\Controllers\Model\Master_regencies; // Kota / Kabupaten
+use App\Http\Controllers\Model\Master_districts; // Kecamatan 
+use App\Http\Controllers\Model\Master_villages; // Kelurahan
+
 use DateTime;
 use Auth;
 use DB;
@@ -31,6 +37,12 @@ class CartController extends Controller
     	$product = Master_product::all();
     	return view('pages/cart/cart',  compact('product'));
     } 
+
+    // Ajax Regency
+    public function regency_ajax(Request $id){
+
+        
+    }
 
     public function check_coupon(Request $request){
         $coupon = Master_coupon::where('coupon_code','=',strtoupper($request->coupon_code))
@@ -90,8 +102,8 @@ class CartController extends Controller
                 $biodata->phone_number = $request->phone_number;
                 $biodata->gender = $request->gender;
                 $biodata->address = $request->address;
-                $biodata->country = $request->country;
-                $biodata->city = $request->city;
+                $biodata->country = "Indonesia";
+                $biodata->regency = $request->regency;
                 $biodata->zipcode = $request->zipcode;
                 $biodata->is_active = 1;
                 $biodata->created_by = "Admin Default";
@@ -157,7 +169,11 @@ class CartController extends Controller
 
      public function checkout(){
         $product = Master_product::all();
-        return view('pages/checkout/checkout',  compact('product'));
+        $provinces = Master_provinces::all();
+        $regencies = Master_regencies::all();
+        $districts = Master_districts::all();
+        $villages = Master_villages::all();
+        return view('pages/checkout/checkout',  compact('product','provinces','regencies','districts','villages'));
     } 
 
     public function buy(Request $request){

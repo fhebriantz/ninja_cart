@@ -21,6 +21,11 @@ Route::get('/destroy', 'Cart\CartController@destroy');
 Route::get('/deletecart/{id}', 'Cart\CartController@deletecart');
 Route::get('/', 'Cart\CartController@show');
 
+// ajax location
+Route::get('ajax-regency', 'Cart\CartController@regency_ajax');
+Route::get('checkout/ajax-regency', 'Cart\CartController@regency_ajax');
+Route::get('/checkout/ajax-regency', 'Cart\CartController@regency_ajax');
+
 // Bayar
 Route::get('/address', 'Cart\CartController@address_input');
 
