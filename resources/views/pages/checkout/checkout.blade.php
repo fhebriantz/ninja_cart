@@ -83,7 +83,7 @@ use Illuminate\Support\Facades\Input; ?>
 									<select form="insert_order" id="province" name="province" class="form-control" >
 										<option>Select Provinces ...</option>
 										@foreach($provinces as $provinsi)
-										<option value="{{$provinsi->name}}" {{ (Input::old("province") == $provinsi->name ? "selected":"") }} >{{$provinsi->name}}</option>
+										<option value="{{$provinsi->id}}" {{ (Input::old("province") == $provinsi->id ? "selected":"") }} >{{$provinsi->name}}</option>
 										@endforeach
 									</select>
 								</div>
@@ -96,21 +96,21 @@ use Illuminate\Support\Facades\Input; ?>
 								      <label for="inputregency">Regency</label><!-- Kota -->
 
 								      <select form="insert_order" name="regency" id="regency" class="form-control">
-								        
+								        <option value="">Select Regency ...</option>
 								      </select>
 								    </div>
 
 								    <div class="form-group col-md-4">
 								      <label for="inputState">District</label>
 								      <select form="insert_order"  name="district" id="district" class="form-control">
-								        
+								        <option value="district">Select District ...</option>
 								      </select>
 								    </div>
 
 								    <div class="form-group col-md-2">
 								      <label for="inputZip">Village</label>
 								      <select form="insert_order"  name="village" id="village" class="form-control">
-								        <
+								        <option value="village">Select Village ...</option>
 								      	
 									  </select>
 								    </div>
@@ -179,14 +179,16 @@ use Illuminate\Support\Facades\Input; ?>
 
 												<div class="input-group mb-3">
 
-												  <input type="text" name="coupon_code"  form="check_coupon" id="check_coupon" value="" class="form-control" placeholder="Check Code">
-
-												  <input type="hidden" name="coupon_code"  form="insert_order" id="coupon_code" value="" class="form-control" placeholder="Enter Code">
+												  <input type="text" name="coupon_code" id="coupon_code"  form="insert_order" value="" class="form-control " placeholder="Enter Code">
+													
 
 												  <div class="input-group-append">
-												  	<input type="submit" name="submit" value="Check" form="check_coupon" class="btn btn-outline-secondary" >
+												  	<button id="check_coupon" class="btn btn-outline-secondary ">Check</button>
 												  </div>
 
+												</div>
+												<div id="statuscoupon">
+													
 												</div>
 												@if (Session::has('success_msg'))
 										          	<p class="text-success m-0">{{ Session::get('success_msg') }}</p>
@@ -204,17 +206,13 @@ use Illuminate\Support\Facades\Input; ?>
 												</table>
 												<p>Total 		= {{Cart::subtotal()}}</p>
 												<p>Pengiriman 	= 9000</p>
-												@if (Session::has('discount'))
-										          	<p>Discount 	= -{{ Session::get('discount') }}</p>
-										        @endif
+												<div id="discount">
+												<p>Discount 	= -0</p>
+												</div>
 												-------------------------------------------
-												@if (Session::has('discount'))
-												<?php $discount = Cart::subtotal(null,null,'')-Session::get('discount')+9000 ?>
-										          	<p>Grand Total 	= {{$discount}}</p>
-										        @else
-										        <?php $discount = Cart::subtotal(null,null,'')+9000 ?>
-										        	<p>Grand Total 	= {{$discount}}</p>
-										        @endif
+												<div id="grandtotal">
+													<p>Grand total = {{Cart::subtotal(null,null,'')+9000}}</p> 
+												</div>
 												
 												
 											</div>
@@ -252,33 +250,102 @@ use Illuminate\Support\Facades\Input; ?>
 
 @section('script')
 <script type="text/javascript">
-	$(document).ready( function () {
-	    $('#cartxtable').Dataxtable();
-	} );
-</script>
-
-<script  type="text/javascript">
 	$('#province').on('change',function(e){
       console.log(e);
 
       var province_id = e.target.value;
 
-      // ajax 
-      $.ajax({
-              url: "{{url("ajax-regency")}}",
-              data: "province_id="+province_id,
-              cache: false,
-              success: function(data){
-                  alert(data)
-         
-              },
-                  error:function(data){
-                    $('.statusbypass').html("ID DMS Tidak Ada / Sudah Selesai");
-                    $('.valuestatus').html("");
-                    console.log("failed"); 
-                  }
-            });
+      // ajax
+      $.get('ajax-province?province_id=' + province_id, function(data){
+        // success data
+        $('#regency').empty();
+        $('#regency').append('<option value="">Select Regency ...</option>');
+        $.each(data, function(index, regencyObj){
+
+          $('#regency').append('<option value="'+regencyObj.id+'" >'+regencyObj.name+'</option>');
+
+        });
+
+      });
 
     });
+</script>
+
+<script type="text/javascript">
+	$('#regency').on('change',function(e){
+      console.log(e);
+
+      var regency_id = e.target.value;
+
+      // ajax
+      $.get('ajax-regency?regency_id=' + regency_id, function(data){
+        // success data
+        $('#district').empty();
+        $('#district').append('<option value="">Select District ...</option>');
+        $.each(data, function(index, districtObj){
+
+          $('#district').append('<option value="'+districtObj.id+'">'+districtObj.name+'</option>');
+
+        });
+
+      });
+
+    });
+</script>
+
+<script type="text/javascript">
+	$('#district').on('change',function(e){
+      console.log(e);
+
+      var district_id = e.target.value;
+
+      // ajax
+      $.get('ajax-district?district_id=' + district_id, function(data){
+        // success data
+        $('#village').empty();
+        $('#village').append('<option value="">Select District ...</option>');
+        $.each(data, function(index, villageObj){
+
+          $('#village').append('<option value="'+villageObj.id+'">'+villageObj.name+'</option>');
+
+        });
+
+      });
+
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    var htmlobjek;
+		    $(document.body).on('click',"#check_coupon",function (e) {
+		      coupon_code = $("#coupon_code").val();
+		       	$.ajax({
+	              url: "{{url("check")}}",
+	              data: "coupon_code="+coupon_code,
+	              cache: false,
+	              	success: function(data){
+		              	var coupon_name = data[0];
+		              	var type = data[1];
+		              	var nominal = data[2];
+		              	var total = data[3];
+		              	var discount = data[4];
+		              	var ongkir = 9000;
+		              	var grandtotal = total - discount + ongkir;
+		                console.log(data);
+		                $('#statuscoupon').html('<p class="text-success m-0">'+coupon_name+'</p>')
+		                $('#discount').html('<p>Discount 	= -'+discount+'</p>')
+		                $('#grandtotal').html('<p>Grand total = '+grandtotal+'</p> ')
+	              },
+	              	error:function(data){
+	                  	$('#statuscoupon').html('<p class="text-danger m-0">Coupon tidak ditemukan</p>')
+	                    console.log("failed"); 
+	                    $('#discount').html('<p>Discount 	= -0</p>')
+	                  	$('#grandtotal').html('<p>Grand total = {{Cart::subtotal(null,null,'')+9000}}</p> ')
+	              	}
+	            });
+		    });
+
 </script>
 @endsection

@@ -11,6 +11,8 @@
 |
 */
 
+Route::get('/check', 'Cart\CartController@check');
+
 // Homeshowaddress
 Route::get('/cart', 'Cart\CartController@show');
 Route::get('/checkout', 'Cart\CartController@checkout');
@@ -22,9 +24,9 @@ Route::get('/deletecart/{id}', 'Cart\CartController@deletecart');
 Route::get('/', 'Cart\CartController@show');
 
 // ajax location
+Route::get('ajax-province', 'Cart\CartController@province_ajax');
 Route::get('ajax-regency', 'Cart\CartController@regency_ajax');
-Route::get('checkout/ajax-regency', 'Cart\CartController@regency_ajax');
-Route::get('/checkout/ajax-regency', 'Cart\CartController@regency_ajax');
+Route::get('ajax-district', 'Cart\CartController@district_ajax');
 
 // Bayar
 Route::get('/address', 'Cart\CartController@address_input');

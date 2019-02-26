@@ -19,6 +19,9 @@ use App\Http\Controllers\Model\Master_customer;
 use App\Http\Controllers\Model\Master_coupon;
 use App\Http\Controllers\Model\Detail;
 
+use Response;
+use Illuminate\Support\Facades\Input;
+
 // LOCATION
 use App\Http\Controllers\Model\Master_provinces; // Profinsi
 use App\Http\Controllers\Model\Master_regencies; // Kota / Kabupaten
@@ -38,10 +41,60 @@ class CartController extends Controller
     	return view('pages/cart/cart',  compact('product'));
     } 
 
-    // Ajax Regency
-    public function regency_ajax(Request $id){
+    public function province_ajax(){ 
 
-        
+        $province_id = Input::get('province_id');
+        $regency = Master_regencies::where('province_id','=',$province_id)->get();
+        return Response::json($regency);
+    }
+
+    public function regency_ajax(){ 
+
+        $regency_id = Input::get('regency_id');
+        $district = Master_districts::where('regency_id','=',$regency_id)->get();
+        return Response::json($district);
+    }
+
+    public function district_ajax(){ 
+
+        $district_id = Input::get('district_id');
+        $village = Master_villages::where('district_id','=',$district_id)->get();
+        return Response::json($village);
+    }
+
+    // Ajax Regency village_ajax
+    public function check(Request $id){
+
+                $check_coupon = Master_coupon::where('coupon_code','=',strtoupper($id->coupon_code))
+                ->first();
+
+                    try {
+                        $coupon_name=$check_coupon->coupon_name;
+                        $type=$check_coupon->type;
+                        $nominal=$check_coupon->nominal;
+                        $total=Cart::subtotal(null,null,'');
+
+                        if ($type == 'nominal') {
+                            $discount = $nominal;
+                        }elseif ($type == 'percentage') {
+                            $discount = (Cart::subtotal(null,null,'') * $nominal)/100;
+                        }
+
+                        // array
+                        $ambil = array();
+                        $ambil[] = $coupon_name; //Nama Coupon
+                        $ambil[] = $type; // Tipe
+                        $ambil[] = $nominal; // Nominal
+                        $ambil[] = $total; // Total
+                        $ambil[] = $discount; // Total
+
+                        return $ambil;
+                    } catch (Exception $e) {
+                        echo "Couldn't find id: " . $e -> getMessage() . "\n";
+                    }
+                
+                
+                
     }
 
     public function check_coupon(Request $request){
@@ -75,15 +128,16 @@ class CartController extends Controller
                 'fullname' => 'required',
                 'address' => 'required',
                 'g-recaptcha-response'=>'required',
+                'province' => 'required',
+                'regency' => 'required',
+                'district' => 'required',
+                'village' => 'required',
         ]);
-
 
             $date_str=strtotime(date('D-m-y H:i:s'));
             $id_order = $date_str;
             $now = new DateTime();
             $waktu = $now->format('Y-m-d H:i:s');
-
-
 
             $select_last_id = Master_customer::all()->last();
             if ($select_last_id ) {
@@ -91,7 +145,6 @@ class CartController extends Controller
             }else{
                 $last_id = 1;
             }
-
             
             // table biodata
             $biodata = new Master_customer;
@@ -102,8 +155,11 @@ class CartController extends Controller
                 $biodata->phone_number = $request->phone_number;
                 $biodata->gender = $request->gender;
                 $biodata->address = $request->address;
-                $biodata->country = "Indonesia";
+                $biodata->province = $request->province;
+                $biodata->district = $request->district;
+                $biodata->village = $request->village;
                 $biodata->regency = $request->regency;
+                $biodata->country = "Indonesia";
                 $biodata->zipcode = $request->zipcode;
                 $biodata->is_active = 1;
                 $biodata->created_by = "Admin Default";
@@ -119,6 +175,7 @@ class CartController extends Controller
                 // Select Coupon
                 $coupon = Master_coupon::where('coupon_code','=',strtoupper($request->coupon_code))
                     ->first();
+
                     // Cek coupon
                     if ($coupon) {
                         // insert row
@@ -160,6 +217,11 @@ class CartController extends Controller
                 );
             }
                 Detail::insert($cartdetail);
+
+
+            // disable coupon
+                $coupon->is_active = 0;
+            $coupon->save();
 
             Session::flash('success_msg', "Transaksi Berhasil");
             Cart::destroy();
