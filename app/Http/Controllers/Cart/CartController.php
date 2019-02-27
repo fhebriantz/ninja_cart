@@ -62,66 +62,8 @@ class CartController extends Controller
         return Response::json($village);
     }
 
-    // Ajax Regency village_ajax
-    public function check(Request $id){
+    
 
-                $check_coupon = Master_coupon::where('coupon_code','=',strtoupper($id->coupon_code))
-                ->first();
-
-                    try {
-                        $coupon_name=$check_coupon->coupon_name;
-                        $type=$check_coupon->type;
-                        $nominal=$check_coupon->nominal;
-                        $total=Cart::subtotal(null,null,'');
-
-                        if ($type == 'nominal') {
-                            $discount = $nominal;
-                        }elseif ($type == 'percentage') {
-                            $discount = (Cart::subtotal(null,null,'') * $nominal)/100;
-                        }
-
-                        // array
-                        $ambil = array();
-                        $ambil[] = $coupon_name; //Nama Coupon
-                        $ambil[] = $type; // Tipe
-                        $ambil[] = $nominal; // Nominal
-                        $ambil[] = $total; // Total
-                        $ambil[] = $discount; // Total
-
-                        return $ambil;
-                    } catch (Exception $e) {
-                        echo "Couldn't find id: " . $e -> getMessage() . "\n";
-                    }
-                
-                
-                
-    }
-
-    public function check_coupon(Request $request){
-        $coupon = Master_coupon::where('coupon_code','=',strtoupper($request->coupon_code))
-                ->first();
-
-        if ($coupon) {
-            if ($coupon->type == 'nominal') {
-                $discount = $coupon->nominal;
-                Session::flash('success_msg', $coupon->coupon_name);
-                Session::flash('discount', $discount);
-                return Redirect::back();
-            }elseif ($coupon->type == 'percentage') {
-                $discount = (Cart::subtotal(null,null,'') * $coupon->nominal)/100;
-                Session::flash('success_msg', $coupon->coupon_name);
-                Session::flash('discount', $discount);
-                return Redirect::back();
-            }
-                
-            
-        } else{
-            Session::flash('failed_msg', "Coupon Tidak Ditemukan");
-            return Redirect::back(); 
-        }
-
-        return view('pages/cart/cart',  compact('product'));
-    } 
 
     public function insert_order(Request $request){
         $validatedData = $request->validate([
@@ -138,18 +80,10 @@ class CartController extends Controller
             $id_order = $date_str;
             $now = new DateTime();
             $waktu = $now->format('Y-m-d H:i:s');
-
-            $select_last_id = Master_customer::all()->last();
-            if ($select_last_id ) {
-                $last_id = $select_last_id->id_cus + 1;
-            }else{
-                $last_id = 1;
-            }
             
             // table biodata
             $biodata = new Master_customer;
 
-                $biodata->id_cus = $last_id;
                 $biodata->fullname = $request->fullname;
                 $biodata->email = $request->email;
                 $biodata->phone_number = $request->phone_number;
@@ -170,7 +104,7 @@ class CartController extends Controller
             $order = new Transaction;
 
                 $order->id_order = $id_order;
-                $order->id_customer = $last_id;
+                $order->id_customer = $biodata->id;
                 $order->total = (Cart::subtotal(null,null,''));
                 // Select Coupon
                 $coupon = Master_coupon::where('coupon_code','=',strtoupper($request->coupon_code))
@@ -180,6 +114,10 @@ class CartController extends Controller
                     if ($coupon) {
                         // insert row
                         $order->id_coupon = $coupon->id;
+
+                        // disable coupon
+                        $coupon->is_active = 0;
+                        $coupon->save();
 
                         // cek nominal or persentase
                         if ($coupon->type == 'nominal') {
@@ -219,9 +157,6 @@ class CartController extends Controller
                 Detail::insert($cartdetail);
 
 
-            // disable coupon
-                $coupon->is_active = 0;
-            $coupon->save();
 
             Session::flash('success_msg', "Transaksi Berhasil");
             Cart::destroy();
@@ -232,10 +167,12 @@ class CartController extends Controller
      public function checkout(){
         $product = Master_product::all();
         $provinces = Master_provinces::all();
-        $regencies = Master_regencies::all();
-        $districts = Master_districts::all();
-        $villages = Master_villages::all();
-        return view('pages/checkout/checkout',  compact('product','provinces','regencies','districts','villages'));
+        if (Cart::content() == '[]'){
+            Session::flash('failed_msg', 'Anda belum membeli apapun');
+            return Redirect::back();  
+        }else{
+            return view('pages/checkout/checkout',  compact('product','provinces','regencies','districts','villages'));
+        }
     } 
 
     public function buy(Request $request){
@@ -243,7 +180,7 @@ class CartController extends Controller
     	$qty = $request->qty;
     	$select_product = Master_product::where('id','=',$id_product)->first();
     	$product = Master_product::all();
-    	Cart::add([
+    	$contet = Cart::add([
             [
                 'id' => $id_product, 
                 'name' => $select_product->product_name, 
@@ -251,8 +188,45 @@ class CartController extends Controller
                 'price' => $select_product->product_price,
             ],
         ]);
-    	return Redirect::back();
+
+
+    	return $contet;
+
     } 
+
+    // Ajax Regency village_ajax
+    public function check(Request $id){
+
+                $check_coupon = Master_coupon::where('coupon_code','=',strtoupper($id->coupon_code))
+                ->where('is_active','=',1)
+                ->first();
+
+                    try {
+                        $coupon_name=$check_coupon->coupon_name;
+                        $type=$check_coupon->type;
+                        $nominal=$check_coupon->nominal;
+                        $total=Cart::subtotal(null,null,'');
+
+                        if ($type == 'nominal') {
+                            $discount = $nominal;
+                        }elseif ($type == 'percentage') {
+                            $discount = (Cart::subtotal(null,null,'') * $nominal)/100;
+                        }
+
+                        // array
+                        $ambil = array();
+                        $ambil[] = $coupon_name; //Nama Coupon
+                        $ambil[] = $type; // Tipe
+                        $ambil[] = $nominal; // Nominal
+                        $ambil[] = $total; // Total
+                        $ambil[] = $discount; // Total
+
+                        return $ambil;
+                    } catch (Exception $e) {
+                        echo "Couldn't find id: " . $e -> getMessage() . "\n";
+                    }           
+                
+    }
 
 
 
@@ -260,7 +234,7 @@ class CartController extends Controller
         $rowId = $request->rowId;
         $qty = $request->qty;
         Cart::update($rowId,$qty);
-        return Redirect::back();
+        return;
     } 
 
     public function destroy(){

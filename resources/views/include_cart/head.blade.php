@@ -15,4 +15,7 @@
 	<!-- Jquery CDN -->
 	<script type="text/javascript"  src="{{ asset('js/jquery.min.js')}}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<!-- fancybox -->
+  	<link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.fancybox.min.css')}}"> 
 	
