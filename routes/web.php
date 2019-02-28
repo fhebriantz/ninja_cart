@@ -12,15 +12,17 @@
 */
 
 Route::get('/check', 'Cart\CartController@check');
+Route::get('/noreload', 'Cart\CartController@noreload');
+Route::post('/noreloads', 'Cart\CartController@noreloads');
 
-// Homeshowaddress
+// Homeshowaddress noreload
 Route::get('/cart', 'Cart\CartController@show');
 Route::get('/checkout', 'Cart\CartController@checkout');
 Route::get('/cart', 'Cart\CartController@show');
 Route::get('/buy', 'Cart\CartController@buy');
 Route::get('/changeqty', 'Cart\CartController@changeqty');
 Route::get('/destroy', 'Cart\CartController@destroy');
-Route::get('/deletecart/{id}', 'Cart\CartController@deletecart');
+Route::get('/deletecart', 'Cart\CartController@deletecart');
 Route::get('/', 'Cart\CartController@show');
 
 // ajax location

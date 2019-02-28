@@ -85,8 +85,8 @@
 											
 										</td>
 						           		<td class="padding_row" ><?php echo $cart->price; ?></td>
-						           		<td class="padding_row" ><?php echo $cart->subtotal; ?></td>
-						           		<td class="padding_row"><a href="<?php echo url("/deletecart/".$cart->rowId)?>">X</a></td>
+						           		<td id="subtotalcart_{{$cart->id}}" class="padding_row" ><?php echo $cart->subtotal; ?></td>
+						           		<td class="padding_row"><a id="deleterow" data-id="{{$cart->rowId}}">X</a></td>
 									</tr>
 								 @endforeach  
 
@@ -99,7 +99,7 @@
 								<td></td>
 								<td></td>
 								<td><strong>Total</strong></td>
-								<td><strong>{{Cart::subtotal()}}</strong></td>
+								<td><strong id="totalcart">{{Cart::subtotal()}}</strong></td>
 							</tr>
 						</tfoot>
 
@@ -142,12 +142,14 @@
 
 	              		if ($('#rowcart'+id_product).length)
 						{
-						 var obj = data[0].data;
-						 alert(obj[rowId]);
+						 	$('#rowcart'+id_product+' #cartqty_'+data.contet[0].rowId+'').val(data.contet[0].qty);
+						 	$('#rowcart'+id_product+' #subtotalcart_'+data.contet[0].id+'').html(data.contet[0].qty * data.contet[0].price);
+						 	$('#totalcart').html(data.total);
 						}
 						else
 						{
-						 	$('#carttable tbody').append('<tr class="height_row"><td class="padding_row">'+data[0].rowId+'</td><td class="padding_row" ><input type="text" name="qty" id="cartqty_rowId" class="widthqty" value="qty"><input type="hidden" name="rowId" value="rowId"><button  data-rowid="rowId"  class="changeqty">change</button></td><td class="padding_row" >price</td><td class="padding_row" >subtotal</td><td class="padding_row"><a href="fungsi delete">X</a></td></tr>');
+						 	$('#carttable tbody').append('<tr id="rowcart'+data.contet[0].id+'" class="height_row"><td class="padding_row">'+data.contet[0].name+'</td><td class="padding_row" ><input type="text" name="qty" id="cartqty_'+data.contet[0].rowId+'" class="widthqty" value="'+data.contet[0].qty+'"><input type="hidden" name="rowId" value="'+data.contet[0].rowId+'"><button  data-rowid="'+data.contet[0].rowId+'"  class="changeqty">change</button></td><td class="padding_row" >'+data.contet[0].price+'</td><td class="padding_row" id="subtotalcart_'+data.contet[0].id+'" >'+data.contet[0].price+'</td><td class="padding_row"><a id="rowappend" data-id="'+data.contet[0].rowId+'">X</a></td></tr>');
+						 	$('#totalcart').html(data.total);
 						}
 
                   		// validasi id
@@ -163,7 +165,74 @@
 	              	}
 	            });
 		    });
+	
+</script>
 
+<!-- Delete -->
+<script>
+	$("#deleterow").submit(function(e) {
+	    e.preventDefault();
+	    $.ajax({
+	              url: "{{url('/noreloads')}}",
+	              data: $("#prospects_form").serialize(),
+	              type : "POST",
+	              cache: false,
+	              success: function(data){
+	              		console.log(data);
+	              		$('#test').html('');
+	              		$('#test').html('<?php echo Cart::subtotal() ;?>');
+	              },
+	              	error:function(data){
+	                  	alert('gagal');
+	              	}
+	            });
+	});
+</script>
+
+<script>
+	$('#carttable tbody a#deleterow').on('click',function(e) {
+		id = $(this).data('id');
+		var a = $(this).closest('tr');
+		$.ajax({
+	              url: "{{url('/deletecart')}}",
+	              data: {id : id},
+	              cache: false,
+	              success: function(data){
+	              		console.log(data);
+	              		console.log($(this).closest('tr'));
+	              		a.remove();
+						$('#totalcart').html(data.total);
+	              },
+	              	error:function(data){
+	                  	alert('gagal');
+	              	}
+	            });
+		
+	});
+</script>
+
+<script>
+	var htmlobjek;
+    $(document.body).on('click',"#rowappend",function (e) {
+		id = $(this).data('id');
+		var a = $(this).closest('tr');
+		console.log('cek');
+		 $.ajax({
+	             url: "{{url('/deletecart')}}",
+	              data: {id : id},
+	              cache: false,
+	              success: function(data){
+	               		console.log(data);
+	              		console.log($(this).closest('tr'));
+	             		a.remove();
+					$('#totalcart').html(data.total);
+	             },
+	            	error:function(data){
+	                   	alert('gagal');
+	               	}
+	             });
+		
+	});
 </script>
 
 <script type="text/javascript">
@@ -176,7 +245,8 @@
 	              data: { rowId: rowId, qty: qty },
 	              cache: false,
 	              success: function(data){
-	              		alert('qty sudah diubah');
+	              	alert(data.sukses);
+	              	$('#totalcart').html(data.total);
 	              },
 	              	error:function(data){
 	                  	alert('qty gagal diubah');

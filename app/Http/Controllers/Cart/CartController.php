@@ -28,6 +28,9 @@ use App\Http\Controllers\Model\Master_regencies; // Kota / Kabupaten
 use App\Http\Controllers\Model\Master_districts; // Kecamatan 
 use App\Http\Controllers\Model\Master_villages; // Kelurahan
 
+
+use App\Http\Controllers\Model\Master_usergroup; // Kelurahan
+
 use DateTime;
 use Auth;
 use DB;
@@ -39,6 +42,10 @@ class CartController extends Controller
     public function show(){
     	$product = Master_product::all();
     	return view('pages/cart/cart',  compact('product'));
+    } 
+
+    public function noreload(){
+        return view('pages/cart/noreload');
     } 
 
     public function province_ajax(){ 
@@ -60,6 +67,20 @@ class CartController extends Controller
         $district_id = Input::get('district_id');
         $village = Master_villages::where('district_id','=',$district_id)->get();
         return Response::json($village);
+    }
+
+    public function noreloads(Request $request){
+
+        $usergroup = new Master_usergroup;
+
+        $usergroup->usergroup = $request->usergroup;
+        $usergroup->is_active = 1;
+        $usergroup->created_by = "Admin Default";
+
+        $usergroup->save();
+        return 'berhasil';
+
+
     }
 
     
@@ -189,8 +210,8 @@ class CartController extends Controller
             ],
         ]);
 
-
-    	return $contet;
+        $noreload = array('contet' => $contet, 'total' => Cart::subtotal());
+    	return $noreload;
 
     } 
 
@@ -234,7 +255,9 @@ class CartController extends Controller
         $rowId = $request->rowId;
         $qty = $request->qty;
         Cart::update($rowId,$qty);
-        return;
+
+        $noreload = array('sukses' => 'sukses', 'total' => Cart::subtotal());
+        return $noreload;
     } 
 
     public function destroy(){
@@ -243,10 +266,13 @@ class CartController extends Controller
     	return Redirect::back();
     } 
 
-    public function deletecart($id){
-        $rowId = $id;
+    public function deletecart(Request $request){
+        $rowId = $request->id;
         Cart::remove($rowId);
-        return Redirect::back();
+
+        $noreload = array('sukses' => 'sukses', 'total' => Cart::subtotal());
+
+        return $noreload;
     } 
 
     public function address_input(){
