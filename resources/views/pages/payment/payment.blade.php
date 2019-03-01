@@ -15,8 +15,9 @@
 	        @elseif (Session::has('failed_msg'))
 	        	<div class="alert alert-danger">{{ Session::get('failed_msg') }}</div>
 	        @endif
-				<h1>Master Product</h1>
+				<h1>No Order : 123123123213</h1>
 				<br>
+				<p style="width: 100%" class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos praesentium adipisci soluta voluptatum commodi excepturi, nam eos nulla explicabo placeat fugiat temporibus inventore harum ad nemo? Dicta architecto sequi repellendus!</p>
 				<table class="table table-hover">
 					 <thead>
 					    <tr>

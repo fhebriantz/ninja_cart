@@ -254,9 +254,11 @@ class CartController extends Controller
     public function changeqty(Request $request){
         $rowId = $request->rowId;
         $qty = $request->qty;
+        $price = $request->price;
+        $subtotal = $qty * $price;
         Cart::update($rowId,$qty);
 
-        $noreload = array('sukses' => 'sukses', 'total' => Cart::subtotal());
+        $noreload = array('sukses' => 'sukses', 'total' => Cart::subtotal(), 'subtotal' => $subtotal);
         return $noreload;
     } 
 
