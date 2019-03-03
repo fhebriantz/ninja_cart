@@ -106,15 +106,7 @@
 					</div>
 				</table>
 				<a class="btn btn-danger" onclick="return confirm();" href="{{url('/destroy')}}">Destroy Cart </a>
-				<a class="btn btn-primary" data-fancybox data-src="#lanjut" href="javascript:;" >Lanjutkan Pembayaran </a>
-			</div>
-
-			<div id="lanjut" style="display: none;">
-				<div style="width: 350px">
-					
-				</div>
-				<a class="btn btn-danger" style="width: 49%; color: white;" onclick="$.fancybox.close()">Batal</a>
-				<a class="btn btn-primary" style="width: 49%;" href="{{url('/checkout')}}">Lanjut</a>
+				<a class="btn btn-primary" href="{{url('/checkout')}}" >Lanjutkan Pembayaran </a>
 			</div>
 
 
@@ -148,7 +140,7 @@
 						}
 						else
 						{
-						 	$('#carttable tbody').append('<tr id="rowcart'+data.contet[0].id+'" class="height_row"><td class="padding_row">'+data.contet[0].name+'</td><td class="padding_row" ><input type="text" name="qty" id="cartqty_'+data.contet[0].rowId+'" class="widthqty" value="'+data.contet[0].qty+'"><input type="hidden" name="rowId" value="'+data.contet[0].rowId+'"><button  data-rowid="'+data.contet[0].rowId+'"  class="changeqty">change</button></td><td class="padding_row" >'+data.contet[0].price+'</td><td class="padding_row" id="subtotalcart_'+data.contet[0].id+'" >'+data.contet[0].price+'</td><td class="padding_row"><a id="rowappend" data-id="'+data.contet[0].rowId+'">X</a></td></tr>');
+						 	$('#carttable tbody').append('<tr id="rowcart'+data.contet[0].id+'" class="height_row"><td class="padding_row">'+data.contet[0].name+'</td><td class="padding_row" ><input type="text" name="qty" id="cartqty_'+data.contet[0].rowId+'" class="widthqty" value="'+data.contet[0].qty+'"><input type="hidden" name="rowId" value="'+data.contet[0].rowId+'"><button  data-rowid="'+data.contet[0].rowId+'" data-price="'+data.contet[0].price+'" data-id="'+data.contet[0].id+'"  class="changeqty">change</button></td><td class="padding_row" >'+data.contet[0].price+'</td><td class="padding_row" id="subtotalcart_'+data.contet[0].id+'" >'+(data.contet[0].qty * data.contet[0].price)+'</td><td class="padding_row"><a id="rowappend" data-id="'+data.contet[0].rowId+'">X</a></td></tr>');
 						 	$('#totalcart').html(data.total);
 						}
 
