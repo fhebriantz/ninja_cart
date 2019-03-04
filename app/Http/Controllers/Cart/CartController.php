@@ -61,8 +61,9 @@ class CartController extends Controller
 
     public function payment($id){
         $transaction = Transaction::getTrans()->where('id_order','=',$id)->first();
-        $detail = Detail::all()->where('id_order','=',$id);
-        return view('pages/payment/payment', compact('transaction','detail'));
+        $detail = Detail::getDetail()->where('id_order','=',$id);
+        $customer = Master_customer::all()->where('id','=',$transaction->id_customer)->first();
+        return view('pages/payment/payment', compact('transaction','detail','customer'));
     }
 
     public function province_ajax(){ 
@@ -145,8 +146,7 @@ class CartController extends Controller
                 $order->id_customer = $biodata->id;
                 $order->total = (Cart::subtotal(null,null,''));
                 // Select Coupon
-                $coupon = Master_coupon::where('coupon_code','=',strtoupper($request->coupon_code))
-                    ->first();
+                $coupon = Master_coupon::where('coupon_code','=',strtoupper($request->coupon_code))->where('is_active','=',1)->first();
 
                     // Cek coupon
                     if ($coupon) {
@@ -160,13 +160,10 @@ class CartController extends Controller
                         // cek nominal or persentase
                         if ($coupon->type == 'nominal') {
                             $order->grand_total = (Cart::subtotal(null,null,'') - $coupon->nominal)+9000;
-
-                            $grand_total = (Cart::subtotal(null,null,'') - $coupon->nominal)+9000;
                             $order->discount = $coupon->nominal;
                             $order->discount_type = $coupon->type;
                         }elseif ($coupon->type == 'percentage') {
                             $order->grand_total = (Cart::subtotal(null,null,'') - ((Cart::subtotal(null,null,'') * $coupon->nominal)/100))+9000;
-                            $grand_total = (Cart::subtotal(null,null,'') - ((Cart::subtotal(null,null,'') * $coupon->nominal)/100))+9000;
                             $order->discount = $coupon->nominal;
                             $order->discount_type = $coupon->type;
                         }
@@ -174,8 +171,7 @@ class CartController extends Controller
                     } else{
                         // coupon not available
                         $order->id_coupon = null;
-                        $order->grand_total = Cart::subtotal(null,null,'');
-                        $grand_total = Cart::subtotal(null,null,'');
+                        $order->grand_total = Cart::subtotal(null,null,'')+9000;
                         $order->discount_type = null;
                     }
                 
