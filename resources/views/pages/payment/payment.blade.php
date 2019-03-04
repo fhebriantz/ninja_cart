@@ -15,109 +15,63 @@
 	        @elseif (Session::has('failed_msg'))
 	        	<div class="alert alert-danger">{{ Session::get('failed_msg') }}</div>
 	        @endif
-				<h1>No Order : 123123123213</h1>
-				<br>
-				<p style="width: 100%" class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos praesentium adipisci soluta voluptatum commodi excepturi, nam eos nulla explicabo placeat fugiat temporibus inventore harum ad nemo? Dicta architecto sequi repellendus!</p>
-				<table class="table table-hover">
-					 <thead>
-					    <tr>
-							<th scope="col" >Gambar</th>
-							<th scope="col" >Nama Produk</th>
-							<th scope="col" >SKU</th>
-							<th scope="col" >Harga</th>
-							<th scope="col" >Qty</th>
-							<th scope="col" >Pilih</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php $no = 1 ?>
-						@foreach ($product as $prod)
-						<tr class="height_row">
-							<td scope="row" ><div class="imagesquare"><img class="imageproduct" src="{{ asset('image/product/'.$prod->image)}}" alt=""></div></td>
-							<td class="padding_row" >{{$prod->product_name}}</td>
-							<td class="padding_row" >{{$prod->sku}}</td>
-							<td class="padding_row" >{{$prod->product_price}}</td>
-
-							<input type="hidden" name="id_product" id="id_product{{$prod->id}}" value="{{$prod->id}}">
-
-							<td class="padding_row" ><input class="qty{{$prod->id}} widthqty" value="1" min="1" type="number" id="qty_{{$prod->id}}" name="qty"></td>
-
-							<td class="padding_row" >
-								<button  data-id_product="{{$prod->id}}" class=" buy">Buy</button>
-							</td>
-
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</div>
-
-
-			<div class="col-sm-12 mt-sm-3">
-				<h1>Transaksi Order / Cart</h1>
-				<br>
-				<table id="carttable" class="table table-hover">
-					 <thead>
-					    <tr>
-							<th scope="col" >Nama Produk</th>
-							<th scope="col" >Qty</th>
-							<th scope="col" >Harga</th>
-							<th scope="col" >Sub Total</th>
-							<th></th>
-
-						</tr>
-					</thead>
-					<div id="ubah">
-
-						<tbody>
-
-							<!-- <div id="append_cart"> -->
-
-								  @foreach (Cart::content() as $cart) 
-									<tr id="rowcart{{$cart->id}}" class="height_row">
-										<td class="padding_row"><?php echo $cart->name?></td>
-						           		<td class="padding_row" >
-						           			
-												<input type="text" name="qty" id="cartqty_<?php echo $cart->rowId?>" class="widthqty" value="<?php echo $cart->qty?>">
-
-												<input type="hidden" name="rowId" value="<?php echo $cart->rowId?>">
-
-												<button  data-rowid="<?php echo $cart->rowId?>" data-price="<?php echo $cart->price; ?>" data-id="<?php echo $cart->id; ?>" class="changeqty">change</button>
-											
-										</td>
-						           		<td class="padding_row" ><?php echo $cart->price; ?></td>
-						           		<td id="subtotalcart_{{$cart->id}}" class="padding_row" ><?php echo $cart->subtotal; ?></td>
-						           		<td class="padding_row"><a id="deleterow" data-id="{{$cart->rowId}}">X</a></td>
-									</tr>
-								 @endforeach  
-
-							<!-- </div> -->
-
-						</tbody>
-						<tfoot>
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td><strong>Total</strong></td>
-								<td><strong id="totalcart">{{Cart::subtotal()}}</strong></td>
-							</tr>
-						</tfoot>
-
-					</div>
-				</table>
-				<a class="btn btn-danger" onclick="return confirm();" href="{{url('/destroy')}}">Destroy Cart </a>
-				<a class="btn btn-primary" data-fancybox data-src="#lanjut" href="javascript:;" >Lanjutkan Pembayaran </a>
-			</div>
-
-			<div id="lanjut" style="display: none;">
-				<div style="width: 350px">
+			<div class="text-center" style="width: 100%">
+				<h2>No Order : {{ $transaction->id_order }}</h2>
+				<p class="mt-sm-5" style="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi reiciendis nihil, eum expedita nulla. Nostrum quam est minus dolore! Unde iste debitis adipisci corrupti vero tempore doloremque ipsum in corporis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur animi magnam, nulla quis odio ad cupiditate, dolor totam! Nobis adipisci sit eaque quibusdam assumenda est quidem ipsam. Soluta, nam, explicabo.</p>
+				<h4>Silahkan transfer ke :</h4>
 					
-				</div>
-				<a class="btn btn-danger" style="width: 49%; color: white;" onclick="$.fancybox.close()">Batal</a>
-				<a class="btn btn-primary" style="width: 49%;" href="{{url('/checkout')}}">Lanjut</a>
+				
+				<div class="bank_payment" >
+					<div class="row">
+						<div class="col-sm-1"></div>
+						
+					<div class="col-sm-5">
+						
+			        <p>Bank BCA </p>
+			        <p>Bank BRI </p>
+			        <p>Bank BNI </p>
+			        <p>Bank Mandiri </p>
+			        <p>Bank Danamon </p>
+			        <p>Bank BTN </p>
+					</div>
+					<div class="col-sm-5">
+					<p>98798788789</p>
+			        <p>1234564987987</p>
+			        <p>156445640</p>
+			        <p>90004953545</p>
+			        <p>12884566540001</p>
+			        <p>00116540010</p>
+					</div>
+					</div>
+			    </div>	
 			</div>
 
+			<div class="card_box text-center">
+				<h5>Total pembayaran</h5>
+				<h1>Rp. {{ $transaction->total }}</h1>
+			</div>
+
+			div
+
+
+
+				<h4>id_order : {{ $transaction->id_order }}</h4>
+				<h4>id_customer : {{ $transaction->id_customer }}</h4>
+				<h4>id_coupon : {{ $transaction->id_coupon }}</h4>
+				<h4>total : {{ $transaction->total }}</h4>
+				<h4>discount_type : {{ $transaction->discount_type }}</h4>
+				<h4>discount : {{ $transaction->discount }}</h4>
+				<h4>grand_total : {{ $transaction->grand_total }}</h4>
+				<h4>date_order : {{ $transaction->date_order }}</h4>
+				<h4>is_active : {{ $transaction->is_active }}</h4>
+				<br>
+				<br>
+				<br>
+				@foreach($detail as $detil)
+				<p>{{$detil->id_product}}</p>
+				@endforeach
+
+			</div>
 
 		</div>
 	</div>
@@ -130,134 +84,5 @@
 @endsection
 
 @section('script')
-<script type="text/javascript">
-    var htmlobjek;
-		    $(document.body).on('click',".buy",function (e) {
-		      id_product = $(this).data('id_product');
-		      qty = $("#qty_"+id_product).val();
-		       	$.ajax({
-	              url: "{{url('/buy')}}",
-	              data: { id_product: id_product, qty: qty },
-	              cache: false,
-	              success: function(data){
 
-	              		if ($('#rowcart'+id_product).length)
-						{
-						 	$('#rowcart'+id_product+' #cartqty_'+data.contet[0].rowId+'').val(data.contet[0].qty);
-						 	$('#rowcart'+id_product+' #subtotalcart_'+data.contet[0].id+'').html(data.contet[0].qty * data.contet[0].price);
-						 	$('#totalcart').html(data.total);
-						}
-						else
-						{
-						 	$('#carttable tbody').append('<tr id="rowcart'+data.contet[0].id+'" class="height_row"><td class="padding_row">'+data.contet[0].name+'</td><td class="padding_row" ><input type="text" name="qty" id="cartqty_'+data.contet[0].rowId+'" class="widthqty" value="'+data.contet[0].qty+'"><input type="hidden" name="rowId" value="'+data.contet[0].rowId+'"><button  data-rowid="'+data.contet[0].rowId+'"  class="changeqty">change</button></td><td class="padding_row" >'+data.contet[0].price+'</td><td class="padding_row" id="subtotalcart_'+data.contet[0].id+'" >'+data.contet[0].price+'</td><td class="padding_row"><a id="rowappend" data-id="'+data.contet[0].rowId+'">X</a></td></tr>');
-						 	$('#totalcart').html(data.total);
-						}
-
-                  		// validasi id
-                  		// $('#carttable tbody').html("");
-
-                  		// @foreach (Cart::content() as $cart)
-                  		// $('#carttable tbody').append('<tr class="height_row"><td class="padding_row"><?php echo $cart->name?></td><td class="padding_row" ><input type="text" name="qty" id="cartqty_<?php echo $cart->rowId?>" class="widthqty" value="<?php echo $cart->qty?>"><input type="hidden" name="rowId" value="<?php echo $cart->rowId?>"><button  data-rowid="<?php echo $cart->rowId?>"  class="changeqty">change</button></td><td class="padding_row" ><?php echo $cart->price; ?></td><td class="padding_row" ><?php echo $cart->subtotal; ?></td><td class="padding_row"><a href="fungsi delete">X</a></td></tr>');
-                  		// @endforeach
-
-	              },
-	              	error:function(data){
-	                  	alert('produk gagal dibeli');
-	              	}
-	            });
-		    });
-	
-</script>
-
-<!-- Delete -->
-<script>
-	$("#deleterow").submit(function(e) {
-	    e.preventDefault();
-	    $.ajax({
-	              url: "{{url('/noreloads')}}",
-	              data: $("#prospects_form").serialize(),
-	              type : "POST",
-	              cache: false,
-	              success: function(data){
-	              		console.log(data);
-	              		$('#test').html('');
-	              		$('#test').html('<?php echo Cart::subtotal() ;?>');
-	              },
-	              	error:function(data){
-	                  	alert('gagal');
-	              	}
-	            });
-	});
-</script>
-
-<script>
-	$('#carttable tbody a#deleterow').on('click',function(e) {
-		id = $(this).data('id');
-		var a = $(this).closest('tr');
-		$.ajax({
-	              url: "{{url('/deletecart')}}",
-	              data: {id : id},
-	              cache: false,
-	              success: function(data){
-	              		console.log(data);
-	              		console.log($(this).closest('tr'));
-	              		a.remove();
-						$('#totalcart').html(data.total);
-	              },
-	              	error:function(data){
-	                  	alert('gagal');
-	              	}
-	            });
-		
-	});
-</script>
-
-<script>
-	var htmlobjek;
-    $(document.body).on('click',"#rowappend",function (e) {
-		id = $(this).data('id');
-		var a = $(this).closest('tr');
-		console.log('cek');
-		 $.ajax({
-	             url: "{{url('/deletecart')}}",
-	              data: {id : id},
-	              cache: false,
-	              success: function(data){
-	               		console.log(data);
-	              		console.log($(this).closest('tr'));
-	             		a.remove();
-					$('#totalcart').html(data.total);
-	             },
-	            	error:function(data){
-	                   	alert('gagal');
-	               	}
-	             });
-		
-	});
-</script>
-
-<script type="text/javascript">
-    var htmlobjek;
-		    $(document.body).on('click',".changeqty",function (e) {
-		      rowId = $(this).data('rowid');
-		      qty = $("#cartqty_"+rowId).val();
-		      price = $(this).data('price');
-		      id = $(this).data('id');
-
-		       	$.ajax({
-	              url: "{{url('/changeqty')}}",
-	              data: { rowId: rowId, qty: qty, price:price},
-	              cache: false,
-	              success: function(data){
-	              	console.log(data.subtotal);
-	              	$('#totalcart').html(data.total);
-	              	$('#subtotalcart_'+id).html(data.subtotal);
-	              },
-	              	error:function(data){
-	                  	alert('qty gagal diubah');
-	              	}
-	            });
-		    });
-
-</script>
 @endsection

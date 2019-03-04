@@ -13,6 +13,7 @@
 
 Route::get('/check', 'Cart\CartController@check');
 Route::get('/noreload', 'Cart\CartController@noreload');
+Route::get('/payment/{id}', 'Cart\CartController@payment');
 Route::post('/noreloads', 'Cart\CartController@noreloads');
 
 // Homeshowaddress noreload

@@ -48,6 +48,23 @@ class CartController extends Controller
         return view('pages/cart/noreload');
     } 
 
+     public function checkout(){
+        $product = Master_product::all();
+        $provinces = Master_provinces::all();
+        if (Cart::content() == '[]'){
+            Session::flash('failed_msg', 'Anda belum membeli apapun');
+            return redirect('/cart');
+        }else{
+            return view('pages/checkout/checkout',  compact('product','provinces','regencies','districts','villages'));
+        }
+    } 
+
+    public function payment($id){
+        $transaction = Transaction::getTrans()->where('id_order','=',$id)->first();
+        $detail = Detail::all()->where('id_order','=',$id);
+        return view('pages/payment/payment', compact('transaction','detail'));
+    }
+
     public function province_ajax(){ 
 
         $province_id = Input::get('province_id');
@@ -143,10 +160,13 @@ class CartController extends Controller
                         // cek nominal or persentase
                         if ($coupon->type == 'nominal') {
                             $order->grand_total = (Cart::subtotal(null,null,'') - $coupon->nominal)+9000;
+
+                            $grand_total = (Cart::subtotal(null,null,'') - $coupon->nominal)+9000;
                             $order->discount = $coupon->nominal;
                             $order->discount_type = $coupon->type;
                         }elseif ($coupon->type == 'percentage') {
                             $order->grand_total = (Cart::subtotal(null,null,'') - ((Cart::subtotal(null,null,'') * $coupon->nominal)/100))+9000;
+                            $grand_total = (Cart::subtotal(null,null,'') - ((Cart::subtotal(null,null,'') * $coupon->nominal)/100))+9000;
                             $order->discount = $coupon->nominal;
                             $order->discount_type = $coupon->type;
                         }
@@ -155,6 +175,7 @@ class CartController extends Controller
                         // coupon not available
                         $order->id_coupon = null;
                         $order->grand_total = Cart::subtotal(null,null,'');
+                        $grand_total = Cart::subtotal(null,null,'');
                         $order->discount_type = null;
                     }
                 
@@ -177,24 +198,13 @@ class CartController extends Controller
             }
                 Detail::insert($cartdetail);
 
+            // Kirim Next Payment
 
-
-            Session::flash('success_msg', "Transaksi Berhasil");
             Cart::destroy();
-            return  redirect('/cart');
+            return redirect(url('payment/'.$id_order));
 
     }
 
-     public function checkout(){
-        $product = Master_product::all();
-        $provinces = Master_provinces::all();
-        if (Cart::content() == '[]'){
-            Session::flash('failed_msg', 'Anda belum membeli apapun');
-            return Redirect::back();  
-        }else{
-            return view('pages/checkout/checkout',  compact('product','provinces','regencies','districts','villages'));
-        }
-    } 
 
     public function buy(Request $request){
     	$id_product = $request->id_product;

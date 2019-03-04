@@ -10,6 +10,14 @@ body{
 .logo {
     float: left;
 }
+
+.bank_payment{
+  display: inline-block; 
+  text-align: left; 
+  width: 35%;
+  font-size: 20px;
+  font-weight: 600;
+}
 .imagestyle {
     padding: 15px;
     width: 200px;

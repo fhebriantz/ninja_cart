@@ -62,11 +62,16 @@ use Illuminate\Support\Facades\Input; ?>
 							<div class="p-10">
 								<div class="form-group">
 									<label for="">Gender</label>
-									<select form="insert_order" name="gender" class="form-control" id="">
-										<option>Select Gender ...</option>
-										<option value="Man" {{ (Input::old("gender") == "Man" ? "selected":"") }} >Man</option>
-										<option value="Woman" {{ (Input::old("gender") == "Woman" ? "selected":"") }} >Woman</option>
-									</select>
+									<div>
+										<div class="form-check form-check-inline">
+										  <input form="insert_order" class="form-check-input" type="radio" name="gender" value="Man" {{ (Input::old("gender") == "Man" ? "checked":"") }}>
+										  <label class="form-check-label" for="gender">Man</label>
+										</div>
+										<div class="form-check form-check-inline">
+										  <input form="insert_order" class="form-check-input" type="radio" name="gender" value="Woman" {{ (Input::old("gender") == "Woman" ? "checked":"") }}>
+										  <label class="form-check-label" for="gender">Woman</label>
+										</div>
+									</div>
 								</div>
 							</div>
 
@@ -231,6 +236,12 @@ use Illuminate\Support\Facades\Input; ?>
 								<p style="padding-top: 10px; color: red"><strong>{{ session('captcha')}}</strong></p>
 								<input type="submit" name="submit" value="Bayar" form="insert_order">
 
+
+
+								<div>
+									<p id="test"></p>
+								</div>
+
 							</div>
 
 						</div>
@@ -249,6 +260,26 @@ use Illuminate\Support\Facades\Input; ?>
 @endsection
 
 @section('script')
+<script  type="text/javascript">
+	// $("#insert_order").submit(function(e) {
+	//     e.preventDefault();
+	//     $.ajax({
+	//               url: "{{url('/insert_order')}}",
+	//               data: $("#insert_order").serialize(),
+	//               type : "POST",
+	//               cache: false,
+	//               success: function(data){
+	//               		console.log(data);
+	//               		$('#test').html('');
+	//               		$('#test').html('sukses');
+	//               },
+	//               	error:function(data){
+	//                   	alert('Cek kembali pada saat pengisian field');
+	//               	}
+	//             });
+	// });
+</script>
+
 <script type="text/javascript">
 	$('#province').on('change',function(e){
       console.log(e);
