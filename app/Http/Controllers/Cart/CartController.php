@@ -55,7 +55,7 @@ class CartController extends Controller
             Session::flash('failed_msg', 'Anda belum membeli apapun');
             return redirect('/cart');
         }else{
-            return view('pages/checkout/checkout',  compact('product','provinces','regencies','districts','villages'));
+            return view('pages/checkout/checkout',  compact('product','provinces'));
         }
     } 
 
