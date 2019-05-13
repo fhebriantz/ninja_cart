@@ -1,254 +1,226 @@
-@extends('layouts.layout')
-@section('head')
-	<title>Transaksi Order</title>
-@endsection
 
-@section('content')
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fiber Creme - Shopping Cart</title>
+  @include('include_cart/head')
+  
 
-<div class="container">
-	<div class="col-sm-12"">
-		<div class="row">
-			<div class="col-sm-12 mt-sm-5
-			">
-			@if (Session::has('success_msg'))
-	          	<div class="alert alert-success">{{ Session::get('success_msg') }}</div>
-	        @elseif (Session::has('failed_msg'))
-	        	<div class="alert alert-danger">{{ Session::get('failed_msg') }}</div>
-	        @endif
-				<h1>Master Product</h1>
-				<br>
-				<table class="table table-hover">
-					 <thead>
-					    <tr>
-							<th scope="col" >Gambar</th>
-							<th scope="col" >Nama Produk</th>
-							<th scope="col" >SKU</th>
-							<th scope="col" >Harga</th>
-							<th scope="col" >Qty</th>
-							<th scope="col" >Pilih</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php $no = 1 ?>
-						@foreach ($product as $prod)
-						<tr class="height_row">
-							<td scope="row" ><div class="imagesquare"><img class="imageproduct" src="{{ asset('image/product/'.$prod->image)}}" alt=""></div></td>
-							<td class="padding_row" >{{$prod->product_name}}</td>
-							<td class="padding_row" >{{$prod->sku}}</td>
-							<td class="padding_row" >{{$prod->product_price}}</td>
-
-							<input type="hidden" name="id_product" id="id_product{{$prod->id}}" value="{{$prod->id}}">
-
-							<td class="padding_row" ><input class="qty{{$prod->id}} widthqty" value="1" min="1" type="number" id="qty_{{$prod->id}}" name="qty"></td>
-
-							<td class="padding_row" >
-								<button  data-id_product="{{$prod->id}}" class=" buy">Buy</button>
-							</td>
-
-						</tr>
-						@endforeach
-					</tbody>
-				</table>
-			</div>
-
-
-			<div class="col-sm-12 mt-sm-3">
-				<h1>Transaksi Order / Cart</h1>
-				<br>
-				<table id="carttable" class="table table-hover">
-					 <thead>
-					    <tr>
-							<th scope="col" >Nama Produk</th>
-							<th scope="col" >Qty</th>
-							<th scope="col" >Harga</th>
-							<th scope="col" >Sub Total</th>
-							<th></th>
-
-						</tr>
-					</thead>
-					<div id="ubah">
-
-						<tbody>
-
-							<!-- <div id="append_cart"> -->
-
-								  @foreach (Cart::content() as $cart) 
-									<tr id="rowcart{{$cart->id}}" class="height_row">
-										<td class="padding_row"><?php echo $cart->name?></td>
-						           		<td class="padding_row" >
-						           			
-												<input type="text" name="qty" id="cartqty_<?php echo $cart->rowId?>" class="widthqty" value="<?php echo $cart->qty?>">
-
-												<input type="hidden" name="rowId" value="<?php echo $cart->rowId?>">
-
-												<button  data-rowid="<?php echo $cart->rowId?>" data-price="<?php echo $cart->price; ?>" data-id="<?php echo $cart->id; ?>" class="changeqty">change</button>
-											
-										</td>
-						           		<td class="padding_row" ><?php echo $cart->price; ?></td>
-						           		<td id="subtotalcart_{{$cart->id}}" class="padding_row" ><?php echo $cart->subtotal; ?></td>
-						           		<td class="padding_row"><a id="deleterow" data-id="{{$cart->rowId}}">X</a></td>
-									</tr>
-								 @endforeach  
-
-							<!-- </div> -->
-
-						</tbody>
-						<tfoot>
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td><strong>Total</strong></td>
-								<td><strong id="totalcart">{{Cart::subtotal()}}</strong></td>
-							</tr>
-						</tfoot>
-
-					</div>
-				</table>
-				<a class="btn btn-danger" onclick="return confirm();" href="{{url('/destroy')}}">Destroy Cart </a>
-				<a class="btn btn-primary" href="{{url('/checkout')}}" >Lanjutkan Pembayaran </a>
-			</div>
-
-
-		</div>
-	</div>
-
-
-	
+  
+</head>
+<body>
+<div class="ui inverted menu fiber">
+  <div class="ui container">
+    <a href="http://fibercreme.com/" class="header item">
+      <img class="logo" src="{{ asset('image/logo.png')}}">
+    </a>
+  </div>
 </div>
+<section class="cart">
+  <div class="ui container">
+    @if (Session::has('success_msg'))
+              <div class="alert alert-success">{{ Session::get('success_msg') }}</div>
+          @elseif (Session::has('failed_msg'))
+            <div class="alert alert-danger">{{ Session::get('failed_msg') }}</div>
+          @endif
+    <div class="ui stackable grid">
+      <div class="ten wide column">
+        <h4 class="ui top attached block  header">
+            <div class="content">
+              DAFTAR PRODUK
+            </div>
+          </h4>
+        <div class="product_cart white">
+            <div class="ui divided items">
+<!-- http://azha.ddns.net:8080/ninja_cms/public/assets/images/products/product1552052710.png -->
+              @foreach ($product as $prod)
+              <div class="item">
+                <a class="ui tiny image" id="single_image"  href="{{ url('ninja_cms/public/assets/images/products/'.$prod->filename)}}">
+                    <img src="{{ url('ninja_cms/public/assets/images/products/'.$prod->filename)}}">
+                
+                </a>
+                <div class="content">
+                  <div class="grid-product">
+                      <div class="column3">
+                          <p class="item">{{$prod->sku}}</p>
+                          <h4 class="header title">{{$prod->product_name}}</h4>
+                          <div class="meta">
+                            <span class="price">Rp. {{number_format($prod->product_price,0,'','.')}}</span>
+                          </div>
+                          <div class="description">
+                            <p></p>
+                          </div>
+                      </div>
+                      <div class="column3">
+                        <div class="quantity buttons_added">
 
+                          <input type="hidden" name="id_product" id="id_product{{$prod->id}}" value="{{$prod->id}}">
 
-@endsection
+                          <input type="button" value="-" class="minus">
 
-@section('script')
+                          <input type="number" step="1" min="0" max="" name="qty" value="0" title="Qty" class="qty{{$prod->id}} input-text qty text"  id="qty_{{$prod->id}}" size="4" pattern="" inputmode="">
+
+                          <input type="button" value="+" class="plus">
+
+                        </div>
+                      </div>
+                      <div class="column3">
+                        <div data-id_product="{{$prod->id}}" class="buy ui right floated basic button">
+                          BELI
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              @endforeach
+
+            </div>
+
+        </div>
+      </div>
+      <div class="six wide column">
+        <h4 class="ui top attached block  header">
+            <div class="content">
+              RINGKASAN PESANAN
+            </div>
+          </h4>
+        <div class="product_cart white ringkasan">
+            <div class="cart_body ui middle aligned divided list">
+
+              @foreach (Cart::content() as $cart) 
+              <div class="item item_cart" id="rowcart{{$cart->id}}">
+                  <div class="right floated content resume-price">
+                    <div class="price" id="subtotalcart_{{$cart->id}}">Rp. <?php echo number_format($cart->subtotal,0,'',''); ?></div>
+                  </div>
+                <div class="content summary">
+                  <a class="header"><?php echo $cart->name?></a>
+                  <p class="item"><?php echo ($cart->options->has('sku') ? $cart->options->sku : ''); ?></p>
+                  <div class="meta">
+                    <span class="qty" id="cartqty_<?php echo $cart->rowId?>"><?php echo $cart->qty?></span> x <span class="pricing"><?php echo number_format($cart->price,0,'',''); ?></span>
+                  </div>
+                  <a id="deleterow" class="delete red" data-id="{{$cart->rowId}}">Hapus</a>
+                </div>
+              </div>
+              @endforeach  
+
+            </div>
+
+          
+            <div class="ui divider"></div>
+            <div class="total-items">total <span  id="countitem">{{Cart::count()}}</span> items</div>
+            <div class="subtotal">
+              <div class="ui equal width grid">
+                  <div class="column">Subtotal</div>
+                  <div class="column">
+                    <span class="subtotal-price"  id="totalcart">Rp. {{Cart::subtotal(0,'','.')}}</span>
+                  </div>
+              </div>
+            </div>
+
+            <a onclick="return confirm();" href="{{url('/destroy')}}">
+              <div class="ui red button check" >
+                Hapus Semua
+              </div>
+            </a>
+            <a href="{{url('/checkout')}}">
+              <div class="ui green button check">
+                Checkout
+              </div>
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ asset('js/qty.js')}}"></script>
+
+<script src="{{ asset('js/jquery.fancybox.min.js')}}"></script>
+<!-- Buy -->
+
 <script type="text/javascript">
+  $("a#single_image").fancybox();
     var htmlobjek;
-		    $(document.body).on('click',".buy",function (e) {
-		      id_product = $(this).data('id_product');
-		      qty = $("#qty_"+id_product).val();
-		       	$.ajax({
-	              url: "{{url('/buy')}}",
-	              data: { id_product: id_product, qty: qty },
-	              cache: false,
-	              success: function(data){
+        $(document.body).on('click',".buy",function (e) {
+          id_product = $(this).data('id_product');
+          qty = $("#qty_"+id_product).val();
+            $.ajax({
+                url: "{{url('/buy')}}",
+                data: { id_product: id_product, qty: qty },
+                cache: false,
+                success: function(data){
 
-	              		if ($('#rowcart'+id_product).length)
-						{
-						 	$('#rowcart'+id_product+' #cartqty_'+data.contet[0].rowId+'').val(data.contet[0].qty);
-						 	$('#rowcart'+id_product+' #subtotalcart_'+data.contet[0].id+'').html(data.contet[0].qty * data.contet[0].price);
-						 	$('#totalcart').html(data.total);
-						}
-						else
-						{
-						 	$('#carttable tbody').append('<tr id="rowcart'+data.contet[0].id+'" class="height_row"><td class="padding_row">'+data.contet[0].name+'</td><td class="padding_row" ><input type="text" name="qty" id="cartqty_'+data.contet[0].rowId+'" class="widthqty" value="'+data.contet[0].qty+'"><input type="hidden" name="rowId" value="'+data.contet[0].rowId+'"><button  data-rowid="'+data.contet[0].rowId+'" data-price="'+data.contet[0].price+'" data-id="'+data.contet[0].id+'"  class="changeqty">change</button></td><td class="padding_row" >'+data.contet[0].price+'</td><td class="padding_row" id="subtotalcart_'+data.contet[0].id+'" >'+(data.contet[0].qty * data.contet[0].price)+'</td><td class="padding_row"><a id="rowappend" data-id="'+data.contet[0].rowId+'">X</a></td></tr>');
-						 	$('#totalcart').html(data.total);
-						}
+                    if ($('#rowcart'+id_product).length)
+                    {
+                      $('#rowcart'+id_product+' #cartqty_'+data.contet[0].rowId+'').html(data.contet[0].qty);
+                      $('#rowcart'+id_product+' #subtotalcart_'+data.contet[0].id+'').html('Rp. '+(data.contet[0].qty * data.contet[0].price));
+                      $('#totalcart').html('Rp. '+data.total);
+                      $('#countitem').html(data.count);
+                    }
+                    else
+                    {
+                      $('.product_cart .cart_body').append('<div class="item item_cart" id="rowcart'+data.contet[0].id+'"><div class="right floated content resume-price"><div class="price" id="subtotalcart_'+data.contet[0].id+'">Rp. '+(data.contet[0].qty * data.contet[0].price)+'</div></div><div class="content summary"><a class="header">'+data.contet[0].name+'</a><p class="item">'+data.sku+'</p><div class="meta"><span class="qty" id="cartqty_'+data.contet[0].rowId+'">'+data.contet[0].qty+'</span> x <span class="pricing">'+data.contet[0].price+'</span></div><a id="rowappend" class="delete red" data-id="'+data.contet[0].rowId+'">Hapus</a></div></div>');
+                      $('#totalcart').html('Rp. '+data.total);
+                      $('#countitem').html(data.count);
+                    }
 
-                  		// validasi id
-                  		// $('#carttable tbody').html("");
-
-                  		// @foreach (Cart::content() as $cart)
-                  		// $('#carttable tbody').append('<tr class="height_row"><td class="padding_row"><?php echo $cart->name?></td><td class="padding_row" ><input type="text" name="qty" id="cartqty_<?php echo $cart->rowId?>" class="widthqty" value="<?php echo $cart->qty?>"><input type="hidden" name="rowId" value="<?php echo $cart->rowId?>"><button  data-rowid="<?php echo $cart->rowId?>"  class="changeqty">change</button></td><td class="padding_row" ><?php echo $cart->price; ?></td><td class="padding_row" ><?php echo $cart->subtotal; ?></td><td class="padding_row"><a href="fungsi delete">X</a></td></tr>');
-                  		// @endforeach
-
-	              },
-	              	error:function(data){
-	                  	alert('produk gagal dibeli');
-	              	}
-	            });
-		    });
-	
+                },
+                  error:function(data){
+                      console.log('produk gagal dibeli');
+                  }
+              });
+        });
+  
 </script>
-
-<!-- Delete -->
+<!-- Delete Row -->
 <script>
-	$("#deleterow").submit(function(e) {
-	    e.preventDefault();
-	    $.ajax({
-	              url: "{{url('/noreloads')}}",
-	              data: $("#prospects_form").serialize(),
-	              type : "POST",
-	              cache: false,
-	              success: function(data){
-	              		console.log(data);
-	              		$('#test').html('');
-	              		$('#test').html('<?php echo Cart::subtotal() ;?>');
-	              },
-	              	error:function(data){
-	                  	alert('gagal');
-	              	}
-	            });
-	});
+  $('.product_cart  a#deleterow').on('click',function(e) {
+    id = $(this).data('id');
+    var a = $(this).closest('.item_cart');
+    $.ajax({
+                url: "{{url('/deletecart')}}",
+                data: {id : id},
+                cache: false,
+                success: function(data){
+                    console.log(data);
+                    console.log($(this).closest('.item_cart'));
+                    a.remove();
+            $('#totalcart').html('Rp. '+data.total);
+            $('#countitem').html(data.count);
+                },
+                  error:function(data){
+                      alert('gagal');
+                  }
+              });
+    
+  });
 </script>
-
 <script>
-	$('#carttable tbody a#deleterow').on('click',function(e) {
-		id = $(this).data('id');
-		var a = $(this).closest('tr');
-		$.ajax({
-	              url: "{{url('/deletecart')}}",
-	              data: {id : id},
-	              cache: false,
-	              success: function(data){
-	              		console.log(data);
-	              		console.log($(this).closest('tr'));
-	              		a.remove();
-						$('#totalcart').html(data.total);
-	              },
-	              	error:function(data){
-	                  	alert('gagal');
-	              	}
-	            });
-		
-	});
-</script>
 
-<script>
-	var htmlobjek;
+  $("#single_image").fancybox();
+  var htmlobjek;
     $(document.body).on('click',"#rowappend",function (e) {
-		id = $(this).data('id');
-		var a = $(this).closest('tr');
-		console.log('cek');
-		 $.ajax({
-	             url: "{{url('/deletecart')}}",
-	              data: {id : id},
-	              cache: false,
-	              success: function(data){
-	               		console.log(data);
-	              		console.log($(this).closest('tr'));
-	             		a.remove();
-					$('#totalcart').html(data.total);
-	             },
-	            	error:function(data){
-	                   	alert('gagal');
-	               	}
-	             });
-		
-	});
+    id = $(this).data('id');
+    var a = $(this).closest('.item_cart');
+    console.log('ttt');
+     $.ajax({
+               url: "{{url('/deletecart')}}",
+                data: {id : id},
+                cache: false,
+                success: function(data){
+                    console.log(data);
+                    console.log($(this).closest('.item_cart'));
+                  a.remove();
+          $('#totalcart').html('Rp. '+data.total);
+            $('#countitem').html(data.count);
+               },
+                error:function(data){
+                      alert('gagal');
+                  }
+               });
+    
+  });
 </script>
+</body>
 
-<script type="text/javascript">
-    var htmlobjek;
-		    $(document.body).on('click',".changeqty",function (e) {
-		      rowId = $(this).data('rowid');
-		      qty = $("#cartqty_"+rowId).val();
-		      price = $(this).data('price');
-		      id = $(this).data('id');
-
-		       	$.ajax({
-	              url: "{{url('/changeqty')}}",
-	              data: { rowId: rowId, qty: qty, price:price},
-	              cache: false,
-	              success: function(data){
-	              	console.log(data.subtotal);
-	              	$('#totalcart').html(data.total);
-	              	$('#subtotalcart_'+id).html(data.subtotal);
-	              },
-	              	error:function(data){
-	                  	alert('qty gagal diubah');
-	              	}
-	            });
-		    });
-
-</script>
-@endsection
+</html>

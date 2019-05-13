@@ -1,106 +1,81 @@
-@extends('layouts.layout')
-@section('head')
-	<title>Transaksi Order</title>
-@endsection
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <title>Fiber Creme - Shopping Cart</title>
+  @include('include_cart/head')
+  
+</head>
+<body>
+<div class="ui inverted menu fiber">
+  <div class="ui container">
+    <a href="http://fibercreme.com/" class="header item">
+      <img class="logo" src="{{ asset('image/logo.png')}}">
+    </a>
+  </div>
+</div>
+<div class="end-order">
+  <div class="ui container aligned">
+      <h2 class="ui header">Terima kasih atas pembelian Anda!</h2>
+       <p>Terima kasih telah berbelanja dengan kami hari ini. Order Anda segera di proses dan akan dikirimkan. Anda dapat menggunakan Nomor Order untuk melacak pembelian Anda di <a href="https://www.ninjaxpress.co/" target="_blank">www.ninjaxpress.co</a></p>
+      <div class="ui card">
 
-@section('content')
-
-<div class="container">
-	<div class="col-sm-12"">
-		<div class="row">
-			<div class="col-sm-12 mt-sm-5
-			">
-			@if (Session::has('success_msg'))
-	          	<div class="alert alert-success">{{ Session::get('success_msg') }}</div>
-	        @elseif (Session::has('failed_msg'))
-	        	<div class="alert alert-danger">{{ Session::get('failed_msg') }}</div>
-	        @endif
-				<div class="text-center" style="width: 100%">
-					<h2>No Order : {{ $transaction->id_order }}</h2>
-					<p class="mt-sm-5" style="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi reiciendis nihil, eum expedita nulla. Nostrum quam est minus dolore! Unde iste debitis adipisci corrupti vero tempore doloremque ipsum in corporis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur animi magnam, nulla quis odio ad cupiditate, dolor totam! Nobis adipisci sit eaque quibusdam assumenda est quidem ipsam. Soluta, nam, explicabo.</p>
-					<h4>Silahkan transfer ke :</h4>
-						
-					
-					<div class="bank_payment" >
-						<div class="row">
-							<div class="col-sm-1"></div>
-							
-						<div class="col-sm-5">
-							
-				        <p>Bank BCA </p>
-				        <p>Bank BRI </p>
-				        <p>Bank BNI </p>
-				        <p>Bank Mandiri </p>
-				        <p>Bank Danamon </p>
-				        <p>Bank BTN </p>
-						</div>
-						<div class="col-sm-5">
-						<p>98798788789</p>
-				        <p>1234564987987</p>
-				        <p>156445640</p>
-				        <p>90004953545</p>
-				        <p>12884566540001</p>
-				        <p>00116540010</p>
-						</div>
-						</div>
-				    </div>	
-				</div>
-
-				<div class="card_box text-center">
-					<h5>Total pembayaran</h5>
-					<h1>Rp. {{ $transaction->grand_total }}</h1>
-				</div>
-
-				
-
-				<div class="card_box">
-					<h2>Daftar Pembelian</h2>
-					<div class="row">
-						@foreach($detail as $det)
-						<div class="col-sm-12 p-3">
-							<div class="row">
-								<div class="col-sm-3">
-									<div class="imagesquare"><img class="imageproduct" src="{{ asset('image/product/'.$det->image)}}" alt=""></div>	
-								</div>
-								<div class="col-sm-3">
-									<p>{{$det->product_name}}</p>
-									<p>Jumlah : {{$det->qty}}</p>
-									<p>Berat : {{$det->weight}} gr</p>
-								</div>
-								<div class="col-sm-3">
-									<h4>Rp.  {{$det->price}}</h4>
-								</div>
-							</div>
-						</div>
-						@endforeach
-
-
-					</div>
-					<h2 class="text-right">Total : {{$transaction->total}}</h2>
-
-				</div>
-
-
-				<div class="alamat">
-					<h5>Tujuan Pengiriman</h5>
-					<h5>{{$customer->fullname}}</h5>
-					<p>{{$customer->address}}</p>
-					<p>{{$customer->village}}, {{$customer->district}}, {{$customer->regency}}, {{$customer->zipcode}}</p>
-					<p>{{$customer->province}}</p>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-
-
-	
+        <div class="content">
+          <div class="center aligned description">
+            <p>NO.ORDER</p>
+          </div>
+          <div id="idorder" class="center aligned header">FCNX{{ $transaction->id_order }}</div>
+          <div id="idorder_hidden" hidden="">{{ $transaction->id_order }}</div>
+        </div>
+        <div class="extra content">
+          <div class="center aligned author">
+             <h5>jumlah tagihan</h5>
+             <h2>Rp. {{ number_format($transaction->grand_total,0,'','.') }}</h2>
+          </div>
+        </div>
+      </div>
+      
+  </div>
 </div>
 
+<div class="content mt-sm-4 text-center" >
+          <a href="{{url('/')}}" name="submit"  class=" center aligned ui purple button check">Back</a>
+        </div>
 
-@endsection
 
-@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
 
-@endsection
+<script type="text/javascript">
+  
+$(document).ready(function() {
+  $('.ui.accordion').accordion()
+
+  $('.toggle').click(function() {
+    $('.ui.accordion').accordion('toggle', 1);
+  });
+
+  $('.ui.radio.checkbox').checkbox();
+});
+
+</script>
+<script> 
+ $(function() {
+     if (window.history && window.history.pushState) {
+        var idorder = $('#idorder_hidden').html();
+         window.history.pushState('', null, './'+idorder);
+        $(window).on('popstate', function() {
+            // alert('Back button was pressed.');
+           window.location = "{{url('/cart')}}";
+
+        });
+    }
+ });
+</script>
+<script>
+  
+</script>
+
+</body>
+
+</html>

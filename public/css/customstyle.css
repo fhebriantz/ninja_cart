@@ -1,0 +1,288 @@
+body
+{
+	background-color:#fafafa;
+	font-family: 'Lato';
+}
+
+.ui.menu .item:before{
+  width: 0px !important;
+}
+@media only screen and (min-width: 768px){
+.ui.menu:not(.secondary):not(.text):not(.tabular):not(.borderless)>.container>.item:not(.right):not(.borderless):first-child {
+    border-left: 0px solid rgba(34,36,38,.1) !important; 
+}
+}
+
+.ui.menu {
+	border-radius: 0px !important;
+}
+
+.ui.menu .item>img:not(.ui){
+	width: 4em;
+}
+
+.ui.primary.button
+{
+	border-radius: 0;
+}
+
+.ui.menu.fiber{
+	background-color: #815085;
+}
+
+section.cart
+{
+	margin-top: 15px;
+}
+
+.width100
+{	
+	padding-top: 1rem;
+	vertical-align: top;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: relative;
+    display: inline-block;
+	width: 110px;
+}
+
+.white
+{
+	background-color: #fff;
+	padding: 10px;
+}
+
+.extra input.qty {
+    width: 46px;
+    font-size: 14px;
+}
+
+.grid-product{
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.column3{
+	flex: 1;
+	flex-direction: column;
+}
+
+.column3:first-child {
+    flex-basis: 33%;
+    padding-right: 15px;
+}
+
+.column3:nth-child(2){
+	text-align: center;
+}
+
+.ui.top.attached.header {
+    margin-bottom: 0;
+    border-radius: 0;
+    border: 0;
+}
+
+.ringkasan
+{
+
+}
+
+
+.ringkasan .content
+{
+	font-size: 0.85em;
+	color: #aeaeae;
+}
+
+.ringkasan .content .meta
+{
+	font-size: 0.85em;
+}
+
+.cart .ringkasan .button{
+	width: 100%;
+	margin-top: 10px;
+}
+
+.ringkasan .green.button.check
+{
+	background-color: #815085;
+}
+
+.ringkasan .green.button.check:hover{
+	background-color: #6c4670;
+	/*#ff9db3;*/
+}
+
+.resume-price{
+	margin-top: 25px !important;
+}
+
+.content.summary{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.subtotal{
+	margin-bottom: 20px;
+}
+
+.delete.red
+{
+	font-size: 0.75em;
+    color: #ce310e !important;
+}
+
+span.price{
+	color: #353535;
+	font-weight: 300;
+}
+
+.total-items{
+	font-size: 0.7em;
+	color: #b3b3b3;
+	font-weight: 300;
+}
+
+.subtotal-price{
+	float: right;
+}
+
+
+h4.header.title{
+	font-size: 0.9em;
+	line-height: 1.1em;
+	color: #7f2d80;
+	/*min-height: 32px;*/
+	max-height: 32px;
+	overflow: hidden;
+	margin: 0;
+}
+
+.item .content.summary a.header{
+	color: #7f2d80 !important;
+}
+
+p.item {
+    font-size: 0.75em;
+    color: #b3b3b3;
+    font-weight: 300;
+    margin-bottom: 0;
+}
+
+.resume-price .price{
+	font-weight: 500;
+}
+
+.form-content{
+	margin-left: 1.5em;
+}
+
+table.totalproduk thead th{
+	padding-top: .92857143em !important;
+}
+
+table.totalproduk thead{
+	font-size: 0.75em;
+}
+
+table.totalproduk thead th{
+	color: #aeaeae !important;
+	font-weight: 300 !important;
+	font-style: normal;
+}
+
+table.totalproduk tfoot{
+	font-weight: 700;
+}
+
+table.totalproduk tfoot td{
+	text-transform: uppercase;
+	text-align: right !important;
+}
+
+.end-order .card{
+	margin: 20px auto 20px auto;
+}
+
+.end-order .card h2{
+	margin-top: 0;
+	color: #333333;
+}
+
+.end-order .card h5{
+	margin-bottom: 0;
+}
+
+table.pembayaran{
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+@media screen and (max-width: 680px) {
+	.grid-product .column3 {
+		flex-basis: 100%;
+		margin: 0 0 5px 0;
+	}
+}
+
+
+
+/* -- quantity box -- */
+
+.quantity {
+ display: inline-block; }
+
+.quantity .input-text.qty {
+ width: 35px;
+ height: 37px;
+ padding: 0 5px;
+ text-align: center;
+ background-color: transparent;
+ border: 1px solid #efefef;
+}
+
+.quantity.buttons_added {
+ text-align: left;
+ position: relative;
+ white-space: nowrap;
+ vertical-align: top; }
+
+.quantity.buttons_added input {
+ display: inline-block;
+ margin: 0;
+ vertical-align: top;
+ box-shadow: none;
+}
+
+.quantity.buttons_added .minus,
+.quantity.buttons_added .plus {
+ padding: 7px 10px 8px;
+ height: 37px;
+ background-color: #ffffff;
+ border: 1px solid #efefef;
+ cursor:pointer;}
+
+.quantity.buttons_added .minus {
+ border-right: 0; }
+
+.quantity.buttons_added .plus {
+ border-left: 0; }
+
+.quantity.buttons_added .minus:hover,
+.quantity.buttons_added .plus:hover {
+ background: #eeeeee; }
+
+.quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+ -webkit-appearance: none;
+ -moz-appearance: none;
+ margin: 0; }
+ 
+ .quantity.buttons_added .minus:focus,
+.quantity.buttons_added .plus:focus {
+ outline: none; }
+
